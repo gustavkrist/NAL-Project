@@ -130,6 +130,19 @@ dmypy.json
 
 # Datasets
 data/
+*.csv
+
+# Compressed files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.tar.gz
+*.zip
+*.gzip
 
 # .DS_Store
 .DS_Store
