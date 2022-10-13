@@ -2,13 +2,16 @@ import csv
 import os
 import pickle
 from collections import defaultdict
+from typing import List, Tuple
 
 import networkx as nx
 
 from .load_config import load_config
 
 
-def load_graph(save=None, cache=None, config_path=""):
+def load_graph(
+    save: bool = None, cache: bool = None, config_path: str = ""
+) -> nx.Graph:
     config = load_config(config_path)
     data_location = config["data_location"]
     cache_location = config["cache_location"]
@@ -21,8 +24,7 @@ def load_graph(save=None, cache=None, config_path=""):
     edgelist = project(
         on_file="rotten_tomatoes_movies.csv", data_location=data_location
     )
-    G = nx.Graph()
-    G.add_edges_from(edgelist)
+    G = nx.from_edgelist(edgelist)
     if save:
         with open(cache_location + "network.PKL", "wb+") as f:
             pickle.dump(G, f)
@@ -30,11 +32,11 @@ def load_graph(save=None, cache=None, config_path=""):
 
 
 def project(
-    primary_column="rotten_tomatoes_link",
-    on_column="actors",
-    on_file="rotten_tomatoes_movies.csv",
-    data_location="data/extracted",
-):
+    primary_column: str = "rotten_tomatoes_link",
+    on_column: str = "actors",
+    on_file: str = "rotten_tomatoes_movies.csv",
+    data_location: str = "data/extracted",
+) -> List[Tuple[str, str]]:
     projection = defaultdict(list)
     with open(data_location + on_file) as csv_file:
         rotten_tomatoes = csv.reader(csv_file, delimiter=",", quotechar='"')

@@ -1,8 +1,9 @@
 import json
 import os
+from typing import Any, Dict
 
 
-def load_config(path=""):
+def load_config(path: str = "") -> Dict[str, Any]:
     path = path or "user/config.json"
     config = None
     if os.path.exists(path):
