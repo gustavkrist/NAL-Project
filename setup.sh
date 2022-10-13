@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir data
 mkdir data/extracted
 mkdir data/cache
