@@ -1,0 +1,6 @@
+{
+  "data_location": "data/extracted/",
+  "cache_location": "data/cache/",
+  "save": false,
+  "cache": true
+}
