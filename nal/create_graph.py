@@ -16,8 +16,8 @@ def load_graph(
     config = load_config(config_path)
     data_location = config["data_location"]
     cache_location = config["cache_location"]
-    save = config["save"] if save is None else save
-    cache = config["cache"] if cache is None else cache
+    save = save or config["save"]
+    cache = cache or config["cache"]
     if cache:
         if os.path.exists(cache_location + "network.PKL"):
             with open(cache_location + "network.PKL", "rb") as f:
