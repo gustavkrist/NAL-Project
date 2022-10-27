@@ -36,5 +36,5 @@ The default directory structure is as follows:
       or set the environment variable `NAL_CONFIG_PATH`
 - nal
   - Python module with code for generating the graph and doing stuff with it
-  - You can install the module with `python -m pip install -e` and use it with `import nal`
+  - You can install the module with `python -m pip install -e .` in the `nal` directory and use it with `import nal`
     - If you have the environment variable for the config path set, it should use your config file automatically
