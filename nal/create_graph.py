@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import Dict
 
 import networkx as nx
-from numpy import abs
+from numpy import abs, argmax
 
 from .load_config import load_config
 
@@ -29,7 +29,7 @@ def load_graph(
     if save:
         with open(cache_location + "network.PKL", "wb+") as f:
             pickle.dump(G, f)
-    return G
+    return extract_gcc(G)
 
 
 def project(
@@ -62,3 +62,10 @@ def project(
                         "weight": abs(int(ratings[movie1]) - int(ratings[movie2]))
                     }
     return edgelist
+
+
+def extract_gcc(G: nx.classes.graph.Graph) -> nx.classes.graph.Graph:
+    ccs = list(nx.connected_components(G))
+    biggest_cc = argmax(map(len, ccs))
+    gcc = ccs[biggest_cc]
+    return G.subgraph(gcc)
