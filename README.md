@@ -34,7 +34,9 @@ The default directory structure is as follows:
     - User configuration of defaults is stored here
     - You can either pass the config path as an argument to `create_graph`,
       or set the environment variable `NAL_CONFIG_PATH`
-- nal
+- src
   - Python module with code for generating the graph and doing stuff with it
-  - You can install the module with `python -m pip install -e .` in the `nal` directory and use it with `import nal`
-    - If you have the environment variable for the config path set, it should use your config file automatically
+  - You can install the module with `python -m pip install -e .` in the `src` directory and use it with `import nal`
+  - If you have the environment variable for the config path set, it should use your config file automatically
+  - nal
+    - The source code for the module
