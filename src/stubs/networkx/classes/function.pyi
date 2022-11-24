@@ -1,0 +1,3 @@
+import networkx as nx
+
+def density(G: nx.Graph) -> float: ...
