@@ -6,4 +6,4 @@ setup(name='Network-Analysis-Library',
       author='Group 8',
       packages=find_packages('nal'),
       include_package_data=True,
-      install_requires=['networkx', 'numpy'])
+      install_requires=['networkx', 'numpy', 'matplotlib', 'pandas', 'tabulate'])

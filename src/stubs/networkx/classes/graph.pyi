@@ -1,0 +1,6 @@
+from typing import Iterable
+import networkx as nx
+
+class Graph:
+    def subgraph(self, nodes: Iterable[int | str]) -> nx.Graph: ...
+    def degree(self) -> nx.DegreeView: ...
