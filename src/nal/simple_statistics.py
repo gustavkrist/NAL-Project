@@ -7,6 +7,17 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
+import src.nal.sampling as sampling
+
+def invert_weights(G : nx.Graph) -> nx.Graph:
+    # find maximal weight
+    max_weight = max([edge[2]['weight'] for edge in G.edges(data=True) ])
+
+    # new edge weight is maximal weight - current weight -> sorted edges by weight will be 
+    for edge in G.edges(data=True):
+        edge[2]['weight'] = max_weight - edge[2]['weight']
+
+    return G
 
 def _check_or_create_path(path: str) -> None:
     if not os.path.exists(os.path.dirname(path)):
@@ -57,27 +68,39 @@ def plot_degree_distribution(G: nx.Graph, filename: str) -> None:
 
 
 def basic_statistics(
-    G: nx.Graph, format: str = "latex", filename: str | None = None
+    G: nx.Graph, format: str = "latex", filename: str | None = None, average_repetitions: int = 100
 ) -> None:
     # TODO: Investigate whether these are too slow to feasibly run
+    # they are too slow, so the samplig method
 
-    # avg_clustering_coef = nx.average_clustering(G)
+    avg_clustering_coef = 0
+    avg_clustering_coef_weighted = 0
+    for x in range(average_repetitions):
+        H = sampling.forest_fire(G)
+        avg_clustering_coef += nx.average_clustering(H)
 
-    # # FIXME: Higher weights = higher clustering, so need inverse differential of ratings
+        # # FIXME: Higher weights = higher clustering, so need inverse differential of ratings
+        # # Fixed with inverting edges
+        H = invert_weights(H)
+        avg_clustering_coef_weighted += nx.average_clustering(H, weight="weight")
 
-    # avg_clustering_coef_weighted = nx.average_clustering(G, weight="weight")
+
+    avg_clustering_coef /= average_repetitions
+    avg_clustering_coef_weighted /= average_repetitions
+
+
     density = nx.density(G)
     avg_eig_centrality = np.mean(list(nx.eigenvector_centrality(G).values()))
 
     statistics = [
-        # "Average Clustering Coefficient",
-        # "Average (Weighted) Clustering Coefficient",
+        "Average Clustering Coefficient",
+        "Average (Weighted) Clustering Coefficient",
         "Average Eigenvalue Centrality",
         "Density",
     ]
     values = [
-        # avg_clustering_coef,
-        # avg_clustering_coef_weighted,
+        avg_clustering_coef,
+        avg_clustering_coef_weighted,
         avg_eig_centrality,
         density,
     ]
