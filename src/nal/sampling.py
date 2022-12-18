@@ -24,7 +24,6 @@ def forest_fire(G: nx.Graph, sample_size : int = 100, p : float = 0.4, max_hops 
             if len(queue) == 0:
                 q = deque([visited_nodes.popleft() for x in range(min(max_hops, len(visited_nodes))) ])
                 if len(queue) == 0:
-                    print("not enough nodes")
                     break
             cur_node = queue.popleft()
             sample_nodes.add(cur_node)
@@ -43,4 +42,3 @@ def forest_fire(G: nx.Graph, sample_size : int = 100, p : float = 0.4, max_hops 
                 queue.extend([n])
         break
     return nx.Graph(nx.induced_subgraph(G, sample_nodes))
-    
