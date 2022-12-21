@@ -1,6 +1,35 @@
 import csv
 from .load_config import load_config
 
+def community_rating_average(
+	community : list,
+	primary_column: str = "rotten_tomatoes_link",
+	ratings_column : str = "tomatometer_rating",
+	on_column: str = "rating",
+	on_file: str = "rotten_tomatoes_movies.csv",
+	config_path: str = ""
+) -> dict:
+	config = load_config(config_path)
+	ratings = []
+	with open(config["data_location"] + on_file) as csv_file:
+		rotten_tomatoes = csv.reader(csv_file, delimiter=",", quotechar='"')
+		for i, line in enumerate(rotten_tomatoes):
+			if not i:
+				head = line
+			else:
+				lookup = dict(zip(head, line))
+				if lookup[primary_column] not in community:
+					continue
+				ratings.append(int(lookup[ratings_column]))
+	
+	total_difference = 0
+	count = 0
+	for i in range(len(ratings)):
+		for j in range(i + 1, len(ratings)):
+			total_difference += abs(ratings[i] - ratings[j])
+			count += 1
+	return total_difference / count
+
 def actor_significance(
 	community : list,
 	primary_column: str = "rotten_tomatoes_link",
