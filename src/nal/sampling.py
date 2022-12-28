@@ -42,3 +42,26 @@ def forest_fire(G: nx.Graph, sample_size : int = 100, p : float = 0.4, max_hops 
                 queue.extend([n])
         break
     return nx.Graph(nx.induced_subgraph(G, sample_nodes))
+
+def vanillaRandomWalk(G: nx.Graph, sample_size : int = 100, seed : int = None) -> set:
+	if seed:
+		np.random.seed(seed)
+
+	sample = set()
+	all_nodes = list(G.nodes)
+	current_node = all_nodes[np.random.randint(0, len(all_nodes))]
+	all_nodes = set(G.nodes)
+	while len(sample) < sample_size:
+		if current_node not in sample:
+			sample.add(current_node)
+
+		neighbors = list(set(G.neighbors(current_node)).difference(sample))
+		if len(neighbors) < 1:
+			s = list(all_nodes.difference(sample))
+			current_node = s[np.random.randint(0, len(s))]
+			continue
+
+		current_node = neighbors[np.random.randint(0, len(neighbors))]
+
+	return sample
+

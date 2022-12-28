@@ -7,7 +7,7 @@ from collections import defaultdict
 from typing import Dict
 
 import networkx as nx
-from numpy import abs, argmax
+from numpy import abs, argmax, exp
 
 from .load_config import load_config
 
@@ -62,7 +62,7 @@ def project(
     edgelist: EdgeList = defaultdict(dict)
     for values in projection.values():
         for i, movie1 in enumerate(values):
-            for movie2 in values[i + 1 :]:
+            for movie2 in values[i + 1:]:
                 if ratings[movie1] and ratings[movie2]:
                     edgelist[movie1][movie2] = {
                         "weight": abs(int(ratings[movie1]) - int(ratings[movie2]))
@@ -75,3 +75,31 @@ def extract_gcc(G: nx.Graph) -> nx.Graph:
     biggest_cc = argmax(list(map(len, ccs)))
     gcc = ccs[biggest_cc]
     return G.subgraph(gcc)
+
+
+def create_clique(nodes: list,
+                  primary_column: str = "rotten_tomatoes_link",
+                  on_column: str = "actors",
+                  ratings_column: str = "tomatometer_rating",
+                  on_file: str = "rotten_tomatoes_movies.csv",
+                  data_location: str = "data/extracted",
+                  ) -> nx.Graph:
+    ratings = dict()
+    with open(data_location + "/" + on_file) as csv_file:
+        rotten_tomatoes = csv.reader(csv_file, delimiter=",", quotechar='"')
+        for i, line in enumerate(rotten_tomatoes):
+            if not i:
+                head = line
+            else:
+                lookup = dict(zip(head, line))
+                if lookup[primary_column] in nodes:
+                    ratings[lookup[primary_column]] = lookup[ratings_column]
+    edgelist : EdgeList = defaultdict(dict)
+    nodes = list(nodes)
+    for i in range(0, len(nodes)):
+        for j in range(i + 1, len(nodes)):
+            edgelist[nodes[i]][nodes[j]] = {
+                "weight": exp(abs(int(ratings[nodes[i]]) - int(ratings[nodes[j]])))
+            }
+    G = nx.from_dict_of_dicts(edgelist)
+    return G
